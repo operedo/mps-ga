@@ -1,0 +1,30 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <smmintrin.h>
+
+
+void dotmulsimd_ ( int *len, int *A, int *B, int *res );
+
+/********************************************************************/
+
+void dotmulsimd_ ( int *len, int *A, int *B, int* res )
+
+/********************************************************************/
+{
+
+	int i;
+	__m128i acum = _mm_set1_epi32(0), *a, *b;
+	for (i=0; i<*len; i+=4) {
+		a = (__m128i*) &A[i];
+		b = (__m128i*) &B[i];
+		acum = _mm_add_epi32(acum, _mm_mullo_epi32(*a, *b)); 
+	}
+	*res = _mm_extract_epi32(acum,0) +_mm_extract_epi32(acum,1)  
+		+ _mm_extract_epi32(acum,2) +_mm_extract_epi32(acum,3);
+//		+ _mm_extract_epi32(acum,4) +_mm_extract_epi16(acum,5)
+//		+ _mm_extract_epi32(acum,6) +_mm_extract_epi16(acum,7);
+	
+  	printf ( "  Output res = %d.\n", *res );
+//        return *res;	
+}
+

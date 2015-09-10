@@ -1,0 +1,115 @@
+MPI_HOME = /opt/mpi/bullxmpi/1.1.11.1
+
+#F90 = $(MPI_HOME)/bin/mpif90
+F90= pgf90
+#F90= ifort
+#F90= xlf90_r
+F90FLAGS= -auto 
+#F90FLAGS=
+OPENMPFLAGS= -openmp 
+#OPENMPFLAGS=
+#OPENMPFLAGS= -qsuffix=f=f90 -qsmp=omp
+
+ACCOPT = -ta=nvidia -Minfo=accel
+ACCLDOPT = -ta=nvidia
+
+MPSGALIB= ../lib/libmpsga.a
+
+
+
+testmutation: testmutation.o
+	$(F90) $(F90FLAGS) $(OPENMPFLAGS) testmutation.o \
+		-o testmutation.exe \
+		$(MPSGALIB)
+
+testHistogram: testHistogram.o
+	$(F90) $(F90FLAGS) $(OPENMPFLAGS) testHistogram.o \
+		-o testHistogram.exe \
+		$(MPSGALIB) 
+
+testHistogramOpenmp: testHistogramOpenmp.o
+	$(F90)  $(F90FLAGS) $(OPENMPFLAGS) testHistogramOpenmp.o \
+		-o testHistogramOpenmp.exe  \
+		$(MPSGALIB) \
+
+
+testqsort: testqsort.o
+	$(F90) $(F90FLAGS) $(OPENMPFLAGS) testqsort.o \
+		-o testqsort.exe \
+		$(MPSGALIB)
+
+testqsort2: testqsort2.o
+	$(F90) $(F90FLAGS) $(OPENMPFLAGS) testqsort2.o \
+		-o testqsort2.exe \
+		$(MPSGALIB)
+
+testcrossover: testcrossover.o
+	$(F90) $(F90FLAGS) $(OPENMPFLAGS) testcrossover.o \
+		-o testcrossover.exe \
+		$(MPSGALIB)
+
+testcrossover2D: testcrossover2D.o
+	$(F90) $(F90FLAGS) $(OPENMPFLAGS) testcrossover2D.o \
+		-o testcrossover2D.exe \
+		$(MPSGALIB)
+
+testfitness: testfitness.o
+	$(F90) $(F90FLAGS) $(OPENMPFLAGS) testfitness.o \
+		-o testfitness.exe \
+		$(MPSGALIB)
+
+testChainOperations: testChainOperations.o
+	$(F90) $(F90FLAGS) $(OPENMPFLAGS) testChainOperations.o \
+		-o testChainOperations.exe \
+		$(MPSGALIB) 
+
+testChainOperationsRealCodes: testChainOperationsRealCodes.o
+	$(F90) $(F90FLAGS) $(OPENMPFLAGS) testChainOperationsRealCodes.o \
+		-o testChainOperationsRealCodes.exe \
+		$(MPSGALIB) 
+
+testBinaryTree: testBinaryTree.o
+	$(F90) $(F90FLAGS) $(OPENMPFLAGS) testBinaryTree.o \
+		-o testBinaryTree.exe \
+		$(MPSGALIB) 
+
+testHistogramChainOperations: testHistogramChainOperations.o
+	$(F90) $(F90FLAGS) $(OPENMPFLAGS) testHistogramChainOperations.o \
+		-o testHistogramChainOperations.exe \
+		$(MPSGALIB) 
+			
+testfitnessChainOperations: testfitnessChainOperations.o
+	$(F90) $(F90FLAGS) $(OPENMPFLAGS) testfitnessChainOperations.o \
+		-o testfitnessChainOperations.exe \
+		$(MPSGALIB) 
+
+testfitnessChainOperationsCells: testfitnessChainOperationsCells.o
+	$(F90) $(F90FLAGS) $(OPENMPFLAGS) testfitnessChainOperationsCells.o \
+		-o testfitnessChainOperationsCells.exe \
+		$(MPSGALIB) 
+
+testfitnessChainOperationsCellsACC: testfitnessChainOperationsCells.o
+	$(F90) $(ACCLDOPT) testfitnessChainOperationsCells.o \
+		-o testfitnessChainOperationsCells.exe \
+		$(MPSGALIB) 
+
+
+testSIMDExternalCall: testSIMDExternalCall.o
+	$(F90) $(F90FLAGS) $(OPENMPFLAGS) testSIMDExternalCall.o \
+		-o testSIMDExternalCall.exe \
+		$(MPSGALIB) 
+
+testrng: testrng.o
+	$(F90) $(F90FLAGS) $(OPENMPFLAGS) testrng.o \
+		-o testrng.exe \
+		$(MPSGALIB) 
+
+clean :
+	        rm -f *.o *.exe
+
+.SUFFIXES: .o .f90
+
+#.f90.o : ; $(F90) -c $(F90FLAGS) $(OPENMPFLAGS) $*.f90 -I ../src
+.f90.o : ; $(F90) -c $(ACCLDOPT) $*.f90 -I ../src -I.
+
+
